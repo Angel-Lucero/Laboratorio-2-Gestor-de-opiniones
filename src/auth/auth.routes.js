@@ -289,4 +289,34 @@ router.get('/profile', validateJWT, authController.getProfile);
  */
 router.post('/profile/by-id', requestLimit, authController.getProfileById);
 
+/**
+ * @swagger
+ * /api/v1/auth/verify-2fa:
+ *   post:
+ *     tags: [Authentication]
+ *     summary: Verifica el código 2FA durante el login
+ *     description: Completa el login usando el token temporal y el código TOTP o de recuperación
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - code
+ *             properties:
+ *               code:
+ *                 type: string
+ *                 description: Código TOTP de 6 dígitos o código de recuperación
+ *               token:
+ *                 type: string
+ *                 description: Token temporal recibido en el login (alternativo a Authorization header)
+ *     responses:
+ *       200:
+ *         description: Login completado exitosamente
+ *       401:
+ *         description: Token o código inválido
+ */
+router.post('/verify-2fa', authRateLimit, authController.verifyTwoFactor);
+
 export default router;
